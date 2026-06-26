@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nichollas/base/skills-audit.schema.json",
+  "title": "Skills Audit Trail",
+  "description": "Schema for .claude/skills-audit.json — security review records for installed agent skills.",
+  "type": "object",
+  "required": ["audits"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema file."
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the audit trail."
+    },
+    "audits": {
+      "type": "array",
+      "description": "Ordered list of security reviews, most recent last.",
+      "items": {
+        "type": "object",
+        "required": [
+          "skill",
+          "source",
+          "reviewDate",
+          "riskLevel",
+          "verdict",
+          "reviewer",
+          "notes",
+          "findings"
+        ],
+        "properties": {
+          "skill": {
+            "type": "string",
+            "description": "Name of the reviewed skill."
+          },
+          "source": {
+            "type": "string",
+            "description": "Where the skill was obtained — URL, local path, or description."
+          },
+          "version": {
+            "type": "string",
+            "description": "Version or commit hash at time of review."
+          },
+          "reviewDate": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO 8601 date of the review."
+          },
+          "riskLevel": {
+            "type": "string",
+            "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"],
+            "description": "Overall risk level after review."
+          },
+          "verdict": {
+            "type": "string",
+            "enum": ["INSTALL", "REVIEW", "REJECT"],
+            "description": "Action decision."
+          },
+          "reviewer": {
+            "type": "string",
+            "description": "Who performed the review."
+          },
+          "stars": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "GitHub stars at time of review."
+          },
+          "forks": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "GitHub forks at time of review."
+          },
+          "installs": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Install count from skills.sh at time of review."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Reviewer notes and justification."
+          },
+          "findings": {
+            "type": "array",
+            "description": "Security findings discovered during review.",
+            "items": {
+              "type": "object",
+              "required": ["dimension", "severity", "detail"],
+              "properties": {
+                "dimension": {
+                  "type": "string",
+                  "enum": [
+                    "sourceReputation",
+                    "maliciousInstructions",
+                    "toolPermissions",
+                    "promptInjection",
+                    "obfuscation",
+                    "dependencyChain"
+                  ]
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+                },
+                "detail": {
+                  "type": "string",
+                  "description": "Description of the finding."
+                }
+              }
+            }
+          },
+          "dimensions": {
+            "type": "object",
+            "description": "Per-dimension verdicts.",
+            "properties": {
+              "sourceReputation": { "type": "string", "enum": ["PASS", "WARN", "FAIL"] },
+              "maliciousInstructions": { "type": "string", "enum": ["PASS", "WARN", "FAIL"] },
+              "toolPermissions": { "type": "string", "enum": ["PASS", "WARN", "FAIL"] },
+              "promptInjection": { "type": "string", "enum": ["PASS", "WARN", "FAIL"] },
+              "obfuscation": { "type": "string", "enum": ["PASS", "WARN", "FAIL"] },
+              "dependencyChain": { "type": "string", "enum": ["PASS", "WARN", "FAIL"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

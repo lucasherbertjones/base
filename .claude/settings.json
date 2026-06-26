@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx skills:*)",
+      "Bash(npx skills find:*)",
+      "Bash(npx skills list:*)",
+      "Bash(npx skills add:*)",
+      "WebFetch(https://skills.sh:*)",
+      "WebFetch(https://github.com/*/skills/*/SKILL.md:*)",
+      "WebSearch(* skills agent *)"
+    ],
+    "deny": [
+      "Bash(npx skills add:* -g -y:*)",
+      "Bash(curl * | sh:*)",
+      "Bash(curl * | bash:*)",
+      "Bash(wget * -O - | sh:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash(npx skills add *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'New skill installed. Run security-review-skills before using it.'"
+          }
+        ]
+      }
+    ]
+  },
+  "skills": {
+    "autoLoad": true,
+    "directories": ["skills/"]
+  }
+}

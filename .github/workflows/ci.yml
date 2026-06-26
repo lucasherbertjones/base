@@ -1,0 +1,41 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate skills-audit.json against schema
+        run: |
+          npx ajv-cli validate \
+            -s .claude/skills-audit.schema.json \
+            -d .claude/skills-audit.json \
+            --strict=false
+
+      - name: Validate JSON syntax
+        run: |
+          for f in .claude/*.json .vscode/*.json; do
+            echo "Checking $f..."
+            python3 -m json.tool "$f" > /dev/null
+          done
+
+      - name: Check Markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: yes
+          config-file: .github/workflows/mlc_config.json
+
+      - name: Verify required files exist
+        run: |
+          for f in LICENSE VERSION .gitignore .editorconfig \
+                   SECURITY.md CHANGELOG.md README.md CLAUDE.md; do
+            test -f "$f" || { echo "Missing: $f"; exit 1; }
+          done
+          echo "All required files present."

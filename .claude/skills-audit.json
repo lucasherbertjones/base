@@ -1,0 +1,247 @@
+{
+  "$schema": "skills-audit.schema.json",
+  "description": "Security audit trail for installed agent skills. Each entry records when a skill was reviewed, the verdict, and any findings.",
+  "audits": [
+    {
+      "skill": "find-skills",
+      "source": "local (shipped with base)",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "notes": "Adapted from vercel-labs/skills. Source is trusted. No tool permissions requested beyond npx skills CLI and WebFetch/WebSearch for skill discovery.",
+      "findings": []
+    },
+    {
+      "skill": "security-review-skills",
+      "source": "local (shipped with base)",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "notes": "Authored for this base project. Read-only analysis skill — no tool permissions beyond reading files and searching content. No external network access.",
+      "findings": []
+    },
+    {
+      "skill": "planning-with-files",
+      "source": "github.com/OthmanAdi/planning-with-files",
+      "version": "v3.1.3",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 23000,
+      "forks": 2000,
+      "notes": "Crash-proof file-based planning methodology (task_plan.md, findings.md, progress.md). 60+ agents supported. Pure markdown methodology — no data exfiltration patterns, no network calls, no suspicious instructions. Tools scoped to project-local Read/Write/Bash. Strong community trust (23K stars, 2K forks).",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "grill-me",
+      "source": "github.com/mattpocock/skills",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 20000,
+      "installs": 399000,
+      "notes": "Pre-coding clarification skill. Relentlessly interviews user about plans/designs until all decision branches are resolved. Pure instructional content — no tool declarations beyond AskUserQuestion/Read. Matt Pocock is a trusted TypeScript educator and Vercel alumni. 399K installs on skills.sh.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "tdd",
+      "source": "github.com/mattpocock/skills",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 20000,
+      "installs": 310000,
+      "notes": "Strict red-green-refactor TDD methodology. Tests only public interfaces (no coupling to internals). Includes anti-pattern reference. Pure instructional content — no network calls, no exfiltration, no suspicious patterns. Well-scoped: references companion files (tests.md, mocking.md) rather than bloating the main SKILL.md.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "improve-codebase-architecture",
+      "source": "github.com/mattpocock/skills",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 20000,
+      "installs": 328000,
+      "notes": "Architectural improvement scanner. Generates HTML reports of deepening opportunities. Uses Read for analysis and Write for report generation — no network access, no exfiltration. Designed for local project use only.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "supply-chain-risk-auditor",
+      "source": "github.com/trailofbits/skills",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 5580,
+      "forks": 493,
+      "notes": "Dependency supply chain risk assessment from Trail of Bits — industry-leading security firm (audited Kubernetes, Ethereum, etc.). CC-BY-SA-4.0 license. Professional security tooling — well-scoped, reputable source.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "differential-review",
+      "source": "github.com/trailofbits/skills",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 5580,
+      "forks": 493,
+      "notes": "Security-focused PR/diff analysis from Trail of Bits. Finds vulnerabilities traditional code review misses. Complements the project's security-conscious posture.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "frontend-design",
+      "source": "github.com/anthropics/skills",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "INFO",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 141000,
+      "installs": 595000,
+      "notes": "Official Anthropic skill. Production-grade frontend interfaces with distinctive, non-generic AI aesthetics. Maximum source trust. Recommended as optional for projects with UI.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "superpowers",
+      "source": "github.com/obra/superpowers",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 204000,
+      "installs": 680000,
+      "notes": "Complete 7-stage engineering methodology (brainstorming → git-worktrees → writing-plans → subagent-driven-dev → TDD → verification → code-review → finish). MIT License. 204K stars, 680K+ installs. Very opinionated — recommended as optional for teams wanting maximum process discipline, not as default. 15 individual skills included; heavyweight install.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "write-a-prd",
+      "source": "github.com/mattpocock/ai-engineer-workshop-2026-project",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 164,
+      "installs": 111,
+      "notes": "Complements grill-me: 5-step PRD creation (problem exploration → codebase review → stakeholder interview → module sketching → document generation). Outputs local issues/prd.md only — explicitly instructs 'Do NOT submit a GitHub issue or call any external service.' No network access, no exfiltration patterns. All three security scanners (Gen Agent Trust Hub, Socket, Snyk) report Pass. Matt Pocock's ai-engineer-workshop-2026-project repo with 164 stars. Originally forked from mattpocock/skills (trusted source in this audit).",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "prd-to-issues",
+      "source": "github.com/mattpocock/ai-engineer-workshop-2026-project",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 164,
+      "installs": 99,
+      "notes": "Decomposes a PRD into independently-grabbable issues using vertical slices (tracer bullets) — each issue cuts through ALL integration layers end-to-end, never horizontal slices of a single layer. 3-step process: locate PRD → explore codebase → draft vertical slices. Outputs local markdown files only. All three security scanners report Pass. Same trusted repo as write-a-prd.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "sharp-edges",
+      "source": "github.com/trailofbits/skills",
+      "reviewDate": "2026-06-26",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "base project maintainer",
+      "stars": 5900,
+      "installs": 3900,
+      "notes": "Lighter complement to differential-review from Trail of Bits — industry-leading security firm (audited Kubernetes, Ethereum, etc.). Evaluates API/config/interface design for dangerous defaults where the 'easy path' leads to insecurity. Focuses on security ergonomics, not implementation bugs. CC-BY-SA-4.0 license. Gen Agent Trust Hub: Pass, Snyk: Pass. Socket scanner shows 'Warn' but this is likely a false positive given Trail of Bits' reputation as a top-tier security shop. Complements supply-chain-risk-auditor and differential-review in the security tier.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    }
+  ]
+}

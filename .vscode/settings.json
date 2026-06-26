@@ -1,0 +1,24 @@
+{
+  "search.exclude": {
+    ".claude/plans": true,
+    ".claude/transcripts": true,
+    ".claude/logs": true
+  },
+  "files.exclude": {
+    ".claude/plans": true,
+    ".claude/transcripts": true,
+    ".claude/logs": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.rulers": [80, 100],
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "[markdown]": {
+    "editor.formatOnSave": false,
+    "files.trimTrailingWhitespace": false
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
