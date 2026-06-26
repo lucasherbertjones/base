@@ -14,7 +14,7 @@ jobs:
 
       - name: Validate skills-audit.json against schema
         run: |
-          npx --yes --package=ajv-cli ajv validate \
+          npx --yes ajv-cli validate \
             -s .claude/skills-audit.schema.json \
             -d .claude/skills-audit.json \
             --strict=false
