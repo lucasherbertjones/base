@@ -31,6 +31,7 @@ for new projects bootstrapped from this base. Install them with
 |---|---|---|---|
 | `planning-with-files` | `OthmanAdi/planning-with-files` | Crash-proof file-based planning that survives context loss and `/clear`. Manus-style `task_plan.md` / `findings.md` / `progress.md` pattern. 23K ⭐ | 🟢 LOW |
 | `grill-me` | `mattpocock/skills` | Relentlessly interviews the user about plans/designs until every decision branch is resolved. Eliminates the #1 agent failure mode: misalignment. 399K installs | 🟢 LOW |
+| `grill-with-docs` | `mattpocock/skills` | Same relentless interview as `grill-me`, but maintains a living `CONTEXT.md` and Architecture Decision Records (ADRs) so decisions survive context loss and `/clear`. Pairs with `planning-with-files` | 🟢 LOW |
 | `write-a-prd` | `mattpocock/ai-engineer-workshop-2026-project` | Complements `grill-me`: after being interrogated, documents every decision in a durable PRD at `issues/prd.md`. 5-step process: problem exploration → codebase review → stakeholder interview → module sketching → document generation | 🟢 LOW |
 | `prd-to-issues` | `mattpocock/ai-engineer-workshop-2026-project` | Decomposes the PRD into independently-grabbable issues using vertical slices (tracer bullets). Each issue cuts through all integration layers end-to-end — never horizontal slices of a single layer | 🟢 LOW |
 
@@ -62,6 +63,7 @@ for new projects bootstrapped from this base. Install them with
 # Core — always install
 npx skills add OthmanAdi/planning-with-files -g -y
 npx skills add mattpocock/skills@grill-me -g -y
+npx skills add mattpocock/skills@grill-with-docs -g -y
 npx skills add mattpocock/ai-engineer-workshop-2026-project@write-a-prd -g -y
 npx skills add mattpocock/ai-engineer-workshop-2026-project@prd-to-issues -g -y
 
@@ -90,6 +92,14 @@ spec](https://agentskills.io). Each skill is a directory containing a
 instructions. Skills installed via `npx skills add` are symlinked into the
 agent's skills directory and loaded on demand via progressive disclosure
 (YAML frontmatter → SKILL.md body → references/).
+
+## Spec-Driven Development
+
+This base includes a **built-in pipeline** for defining what to build before
+writing code: `grill-me` → `write-a-prd` → `prd-to-issues`. For teams wanting
+more formal specification workflows, see
+[docs/spec-driven-development.md](docs/spec-driven-development.md) — it covers
+OpenSpec (~55K ⭐), Spec-Kit (~40K ⭐), and product discovery tooling.
 
 ## MCP Servers
 
@@ -182,7 +192,9 @@ never modify code. The main agent decides what to act on.
 │   └── install-recommended-skills.ps1  # Install recommended skills (Windows)
 ├── src/                   # Source code (when applicable)
 ├── tests/                 # Test suite (when applicable)
-└── docs/                  # Documentation (when applicable)
+└── docs/                  # Documentation
+    ├── mcp-recommendations.md
+    └── spec-driven-development.md
 ```
 
 ### File Naming

@@ -242,6 +242,88 @@
         "obfuscation": "PASS",
         "dependencyChain": "PASS"
       }
+    },
+    {
+      "skill": "grill-with-docs",
+      "source": "github.com/mattpocock/skills",
+      "reviewDate": "2026-06-27",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "Lucas Jones",
+      "stars": 20000,
+      "installs": 399000,
+      "notes": "Relentless interview that maintains CONTEXT.md and ADRs. SKILL.md is a 3-line wrapper delegating to /grilling and /domain-modeling sub-skills (same trusted repo). All three auto-scanners (Gen/Socket/Snyk) report Safe/0 alerts/Low Risk. Only finding: sub-skill dependencies not individually installed — mitigated by same-repo trust.",
+      "findings": [
+        "Dependency chain: references /grilling and /domain-modeling sub-skills which were not installed individually. These are in the same mattpocock/skills repo. Mitigation: use grill-me methodology directly if sub-skills unavailable."
+      ],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "MEDIUM"
+      }
+    },
+    {
+      "skill": "spatial",
+      "source": "github.com/duckdb/duckdb-skills",
+      "reviewDate": "2026-06-27",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "Lucas Jones",
+      "installs": 252,
+      "notes": "Official DuckDB spatial extension skill — part of duckdb/duckdb-skills repo. Teaches agents to answer spatial questions using DuckDB's spatial extension and Overture Maps (free global data). Only uses local DuckDB binary + public S3 data. Delegates to install-duckdb (same repo) if binary missing. Clean, well-structured, no security concerns.",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "mapbox-mcp-runtime-patterns",
+      "source": "github.com/mapbox/mapbox-agent-skills",
+      "reviewDate": "2026-06-27",
+      "riskLevel": "LOW",
+      "verdict": "INSTALL",
+      "reviewer": "Lucas Jones",
+      "installs": 722,
+      "notes": "Official Mapbox skill — part of mapbox/mapbox-agent-skills repo (19 skills). Documents integration patterns for Mapbox MCP Server. 100% instructional content: no external calls, no tool declarations, no executable code. References are local files in the same repo. Mapbox is an established company; the MCP server is their official product. Relevant for geospatial operations (distance, area, isochrones, routing).",
+      "findings": [],
+      "dimensions": {
+        "sourceReputation": "PASS",
+        "maliciousInstructions": "PASS",
+        "toolPermissions": "PASS",
+        "promptInjection": "PASS",
+        "obfuscation": "PASS",
+        "dependencyChain": "PASS"
+      }
+    },
+    {
+      "skill": "postgis-skill",
+      "source": "skills.sh listing claims github.com/postgis/postgis",
+      "reviewDate": "2026-06-27",
+      "riskLevel": "CRITICAL",
+      "verdict": "REJECT",
+      "reviewer": "Lucas Jones",
+      "installs": 200,
+      "notes": "CRITICAL: The listed source repo (postgis/postgis) is the actual PostGIS C source code — it contains NO SKILL.md files and no skills/ directory. GitHub Code Search returned zero results for 'postgis-skill SKILL.md'. Either the skill was removed, the skills.sh listing is incorrect, or the skill lives in an undocumented fork/repo. Cannot verify the skill content. REJECT until actual source is identified.",
+      "findings": [
+        "Source not found: postgis/postgis repo has no SKILL.md. Skills.sh listing appears to reference incorrect or outdated source.",
+        "Unable to verify any of the 6 security dimensions — skill content is inaccessible."
+      ],
+      "dimensions": {
+        "sourceReputation": "FAIL",
+        "maliciousInstructions": "UNVERIFIABLE",
+        "toolPermissions": "UNVERIFIABLE",
+        "promptInjection": "UNVERIFIABLE",
+        "obfuscation": "UNVERIFIABLE",
+        "dependencyChain": "UNVERIFIABLE"
+      }
     }
   ]
 }
