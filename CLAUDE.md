@@ -7,9 +7,12 @@ para incorporadoras brasileiras.
 
 ### Value Proposition
 
-Relatório de viabilidade ambiental e urbanística para qualquer terreno no Brasil
-em menos de 30 minutos, usando fontes oficiais federais (SICAR, ANA, IBGE/SRTM),
-substituindo semanas de trabalho manual de consultores.
+**Goal**: deliver an environmental and urban feasibility report for any terrain
+in Brazil in under 30 minutes, using official federal sources (SICAR, ANA,
+IBGE/SRTM), replacing weeks of manual consultant work.
+
+Prioritizing nationwide coverage via federal sources first, with municipal
+depth added where open data is available.
 
 ### Target User
 
@@ -21,9 +24,71 @@ Gerentes de aquisição de incorporadoras de pequeno/médio porte que avaliam
 "Quero saber se esse terreno tem algum impedimento crítico antes de gastar
 dinheiro com visita técnica, advogado e engenheiro."
 
+---
+
+## Current Phase
+
+**Prototype C** — market validation: landing page + 3 real terrain reports
+before starting data layer implementation. See [.claude/task_plan.md](.claude/task_plan.md)
+for the full roadmap.
+
+### Current Goal
+
+We are in **Phase 0 — Market Validation** (3–5 days). The immediate objectives are:
+
+1. Create a landing page with a clear value proposition
+2. Generate 3 real terrain reports (manual/semi-manual process)
+3. Measure interest and conversion with target users (LinkedIn + Google Ads)
+
+**Agent guidance for this phase:**
+
+- **Do not assume that automated nationwide analysis is already implemented.**
+- **Do not expand scope to full automation unless explicitly requested.**
+- The data pipeline (SICAR, ANA, SRTM/GEE) is planned but NOT yet built.
+- Reports at this stage can be hand-crafted — the goal is to validate demand,
+  not to demonstrate technical capability.
+
+---
+
+## Non-Goals (Current Phase)
+
+The following are **explicitly out of scope** for Phase 0. Agents must not
+pursue these unless the user explicitly requests a phase change:
+
+- ❌ Do NOT build automated nationwide zoning coverage
+- ❌ Do NOT integrate all 5 MVP layers with full automation
+- ❌ Do NOT optimize for municipal governments or public-sector use cases
+- ❌ Do NOT implement 3D volumetry or advanced financial feasibility
+- ❌ Do NOT build a marketplace, multi-tenant SaaS, or multiple user profiles
+- ❌ Do NOT implement authentication, payment, or subscription systems
+- ❌ Do NOT build a production data pipeline (GEE, SICAR WFS, ANA WMS)
+
+**Phase 0 is about validation, not construction.** If you are unsure whether
+something is in scope, default to "no" and ask.
+
+---
+
 ## Product Definition
 
-### MVP Layers (5, by priority)
+### Validation Prototype Layers (Current Phase)
+
+The Phase 0 prototype focuses on **3 of the 5 MVP layers** — the ones with
+federal coverage that can demonstrate value immediately:
+
+| # | Layer | Data Source | Coverage |
+|---|---|---|---|
+| 1 | APP / Reserva Legal | SICAR/CAR (GeoServer WFS) | Federal, national |
+| 2 | Risco de inundação | ANA / CEMADEN WMS | Federal, national |
+| 3 | Declividade | SRTM 30m via Google Earth Engine | Global, 30m resolution |
+
+These 3 layers form the **validation triangle**: legal restrictions + natural
+hazards + terrain feasibility. They are sufficient to answer the core JTBD:
+"Does this terrain have any critical showstoppers?"
+
+### Full MVP Layers (Product Vision)
+
+The complete product vision includes 5 layers. Layers 4–5 are planned for
+Phase 2 (full MVP) when municipal data integration is built:
 
 | # | Layer | Data Source | Status |
 |---|---|---|---|
@@ -33,18 +98,69 @@ dinheiro com visita técnica, advogado e engenheiro."
 | 4 | Zoneamento municipal | GeoSampa (SP), IPPUC (Curitiba), open data where available | Municipal, partial coverage |
 | 5 | Valor do m² | ITBI open data (POA), real estate listings (Zap/VivaReal) | Regional, growing coverage |
 
-### Output Format
+---
 
-PDF export + interactive web dashboard. **PDF is the priority** — it's what
-the director shares with partners and lawyers via WhatsApp.
+## Output Format
 
-### Competitive Landscape
+PDF-first report + optional interactive web dashboard.
 
-**OSPA Place** — strong on financial feasibility and 3D volumetry, weak on
-environmental/territorial constraints. Coverage: ~4 cities. **Our advantage:**
-national coverage from day 1 via federal data sources (SICAR, ANA, SRTM).
+### Output Policy
 
-### Stack
+- **PDF is the priority** — it's what the director shares with partners and
+  lawyers via WhatsApp.
+- **Interactive dashboard is secondary** — only build if explicitly requested
+  after PDF validation succeeds.
+- During Phase 0, reports can be static HTML → PDF; no backend required.
+- Every report must state data sources, date of extraction, and confidence
+  level per layer (see [Source Trust Policy](#source-trust-policy)).
+
+---
+
+## Success Criteria (Current Phase)
+
+| Metric | Target |
+|---|---|
+| Real terrain reports generated | 3 |
+| Landing page conversion rate | > 3% on "Quero para meu terreno" form |
+| Cost per lead | < R$ 30 |
+| Target-user conversations | ≥ 5 conversations with acquisition managers |
+| Buying signal | ≥ 2 explicit signals of willingness to pay or pilot request |
+
+**Go/no-go decision**: If conversion > 3% AND ≥ 5 incorporadoras express
+interest AND ≥ 2 buying signals → proceed to Phase 1 (functional prototype).
+Otherwise, pivot or iterate on value proposition.
+
+---
+
+## Competitive Landscape
+
+**OSPA Place** — strong on municipal urban rules, 3D volumetry, and financial
+feasibility. Coverage: ~4 cities (deep but narrow).
+
+**Our positioning**:
+- **Initial focus**: territorial screening for environmental/legal impediments
+  using federal data, enabling broad national applicability from day 1.
+- **Weakness we acknowledge**: municipal zoning and m² value have partial
+  coverage and will grow over time as more cities open their data.
+- **Long-term differentiator**: federal data breadth + municipal depth where
+  available, at a fraction of the time and cost of manual due diligence.
+
+We do NOT compete with OSPA on 3D volumetry or advanced financial modeling.
+Our value is the **elimination filter**: ruling out non-viable terrains before
+expensive formal due diligence begins.
+
+---
+
+## Stack
+
+### Current Phase Stack (Phase 0)
+
+- **Landing page**: static HTML or simple React/Vite
+- **Report generation**: static HTML → PDF via Playwright (no backend required)
+- **No database required** in Phase 0
+- **No geospatial processing pipeline** implemented yet
+
+### Approved Target Stack (Phase 1+)
 
 | Layer | Technology |
 |---|---|
@@ -53,15 +169,17 @@ national coverage from day 1 via federal data sources (SICAR, ANA, SRTM).
 | **Database (MVP)** | DuckDB + spatial extension |
 | **Database (Production)** | PostgreSQL + PostGIS |
 | **Geo processing** | Google Earth Engine (SRTM, vegetation) + Brazilian federal APIs (SICAR, ANA) |
-| **PDF generation** | Jinja2 + WeasyPrint (or Playwright headless) |
+| **PDF generation** | Default: Playwright headless (HTML → PDF). Fallback: WeasyPrint for simpler server-side generation. |
 
-### Current Phase
+> **Note**: Google Earth Engine is part of the approved target architecture,
+> but commercial/operational use may require a commercial license or
+> approved project setup. Do not assume free-tier eligibility for
+> production use. Always check current Earth Engine terms for commercial
+> projects before relying on it in production.
 
-**Prototype C** — market validation: landing page + 3 real terrain reports
-before starting data layer implementation. See [.claude/task_plan.md](.claude/task_plan.md)
-for the full roadmap.
+---
 
-### Key Documents
+## Key Documents
 
 - [CONTEXT.md](CONTEXT.md) — all project decisions (survives `/clear`)
 - [issues/prd.md](issues/prd.md) — full Product Requirements Document
@@ -77,6 +195,35 @@ for the full roadmap.
 
 ---
 
+## Source Trust Policy
+
+Every data point in a report must be traceable. Agents and code MUST follow
+these rules:
+
+1. **Prefer official public sources** — SICAR, ANA, IBGE, INPE, EMBRAPA,
+   municipal open data portals. These are the gold standard.
+2. **Use private/commercial sources only as fallback** — when no official
+   source exists for a given layer and municipality, commercial/proprietary
+   data may be used but MUST be explicitly labeled as such in the report.
+3. **Every report must include per-layer metadata**:
+   - Data source (name + URL or API endpoint)
+   - Date of extraction
+   - Confidence level: 🟢 High (official, < 6 months old) / 🟡 Medium
+     (official but stale, or derived with known methodology) / 🔴 Low
+     (commercial, crowdsourced, or inferred)
+
+4. **Market-price layers require extra caution**:
+   - Asking prices are not transaction prices
+   - Prefer official transaction data (e.g. ITBI) where available
+   - When using listings (Zap, VivaReal, etc.), label them explicitly
+     as asking-price proxies, not ground truth
+
+This policy exists because the report will be shared with lawyers and
+investors — an incorrect data point attributed to an official source can
+damage credibility and create legal exposure.
+
+---
+
 ## Skills
 
 This project includes two **core skills** shipped directly in `skills/`. They
@@ -87,13 +234,9 @@ are loaded automatically by Claude Code and other compatible agents.
 | `find-skills` | Meta | Discover agent skills from the open ecosystem (skills.sh, npx skills CLI) |
 | `security-review-skills` | Security | Security audit for agent skills before installation or activation |
 
-### Recommended Skills
+### Required Now (this repository, current phase)
 
-These ecosystem skills complement the core set and are **strongly recommended**
-for new projects bootstrapped from this base. Install them with
-`npx skills add <source> -g -y` after setting up your project.
-
-**Core workflow (install always):**
+Install these immediately — they are essential for Phase 0 execution:
 
 | Skill | Source | Purpose | Risk |
 |---|---|---|---|
@@ -103,22 +246,21 @@ for new projects bootstrapped from this base. Install them with
 | `write-a-prd` | `mattpocock/ai-engineer-workshop-2026-project` | Complements `grill-me`: after being interrogated, documents every decision in a durable PRD at `issues/prd.md`. 5-step process: problem exploration → codebase review → stakeholder interview → module sketching → document generation | 🟢 LOW |
 | `prd-to-issues` | `mattpocock/ai-engineer-workshop-2026-project` | Decomposes the PRD into independently-grabbable issues using vertical slices (tracer bullets). Each issue cuts through all integration layers end-to-end — never horizontal slices of a single layer | 🟢 LOW |
 
-**Code quality (install for any project with source code):**
+### Recommended Later (install before Phase 1 — functional prototype)
+
+Install these when the project enters Phase 1 (data pipeline + frontend work):
 
 | Skill | Source | Purpose | Risk |
 |---|---|---|---|
 | `tdd` | `mattpocock/skills` | Strict red-green-refactor cycle. Tests public interfaces only — no coupling to internals. Includes anti-pattern reference. 310K installs | 🟢 LOW |
 | `improve-codebase-architecture` | `mattpocock/skills` | Scans codebase for architectural deepening opportunities, generates visual HTML report. Anti-entropy for agent-accelerated projects. 328K installs | 🟢 LOW |
-
-**Security (install for security-conscious projects):**
-
-| Skill | Source | Purpose | Risk |
-|---|---|---|---|
 | `supply-chain-risk-auditor` | `trailofbits/skills` | Dependency risk assessment from industry-leading security firm. Checks for known vulnerabilities, supply chain attacks, and risky patterns | 🟢 LOW |
 | `differential-review` | `trailofbits/skills` | Security-focused PR/diff analysis. Finds vulnerabilities that traditional code review misses | 🟢 LOW |
 | `sharp-edges` | `trailofbits/skills` | Lighter complement to `differential-review`. Evaluates whether APIs, configs, and interfaces are resistant to developer misuse — identifies designs where the "easy path" leads to insecurity. 3.9K installs | 🟢 LOW |
 
-**Optional — domain-specific:**
+### Optional / Domain-Specific
+
+Install only when relevant to the current task:
 
 | Skill | Source | Purpose | When to Use |
 |---|---|---|---|
@@ -127,30 +269,26 @@ for new projects bootstrapped from this base. Install them with
 | `spatial` | `duckdb/duckdb-skills` | DuckDB spatial extension patterns. Overture Maps integration for global geodata. Use for spatial queries in prototyping phase | During MVP with DuckDB |
 | `mapbox-mcp-runtime-patterns` | `mapbox/mapbox-agent-skills` | Mapbox MCP Server integration patterns for geospatial AI applications. Covers distance, area, isochrones, routing tools | When integrating Mapbox MCP |
 
-### Installing Recommended Skills
+### Installing Skills
 
 ```bash
-# Core — always install
+# Required Now — always install
 npx skills add OthmanAdi/planning-with-files -g -y
 npx skills add mattpocock/skills@grill-me -g -y
 npx skills add mattpocock/skills@grill-with-docs -g -y
 npx skills add mattpocock/ai-engineer-workshop-2026-project@write-a-prd -g -y
 npx skills add mattpocock/ai-engineer-workshop-2026-project@prd-to-issues -g -y
 
-# Code quality
+# Recommended Later — install before Phase 1
 npx skills add mattpocock/skills@tdd -g -y
 npx skills add mattpocock/skills@improve-codebase-architecture -g -y
-
-# Security
 npx skills add trailofbits/skills@supply-chain-risk-auditor -g -y
 npx skills add trailofbits/skills@differential-review -g -y
 npx skills add trailofbits/skills@sharp-edges -g -y
 
-# Optional
+# Optional — install on demand
 npx skills add anthropics/skills@frontend-design -g -y
 npx skills add obra/superpowers -g -y
-
-# Domain (Geodata project)
 npx skills add duckdb/duckdb-skills@spatial -g -y
 npx skills add mapbox/mapbox-agent-skills@mapbox-mcp-runtime-patterns -g -y
 ```
@@ -167,6 +305,8 @@ instructions. Skills installed via `npx skills add` are symlinked into the
 agent's skills directory and loaded on demand via progressive disclosure
 (YAML frontmatter → SKILL.md body → references/).
 
+---
+
 ## Spec-Driven Development
 
 This project uses a **built-in pipeline** for defining what to build before
@@ -180,6 +320,8 @@ project, this pipeline produced:
 For teams wanting more formal specification workflows, see
 [docs/spec-driven-development.md](docs/spec-driven-development.md) — it covers
 OpenSpec (~55K ⭐), Spec-Kit (~40K ⭐), and product discovery tooling.
+
+---
 
 ## MCP Servers
 
@@ -197,6 +339,8 @@ instructions.
 > recommendations, not pre-configured defaults. Set them up per-project with
 > `claude mcp add`.
 
+---
+
 ## Workflow: Discover → Audit → Install
 
 When a skill is needed or requested, follow this sequence:
@@ -210,6 +354,8 @@ When a skill is needed or requested, follow this sequence:
 **Never skip the security review.** A skill has access to the agent's full
 context and tool permissions. Treat installing a skill like running third-party
 code.
+
+---
 
 ## Sub-agents
 
@@ -235,6 +381,8 @@ agent decides what to act on. Note: `Bash` is included for read-only operations
 (installing audit dependencies, running static analyzers); agents are
 instructed to never use it for destructive writes.
 
+---
+
 ## Security Posture
 
 - **Default deny**: No skill is trusted by default — even skills shipped with
@@ -250,6 +398,8 @@ instructed to never use it for destructive writes.
 - **Principle of least privilege**: When a skill declares `allowed-tools`,
   scope them to the minimum necessary. Prefer path-scoped `Write` over
   unrestricted access.
+
+---
 
 ## Conventions
 
