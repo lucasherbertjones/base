@@ -2,12 +2,75 @@
 
 ## About This Project
 
-This is a **reusable base** for bootstrapping new projects with agent-first
-conventions. Clone or copy it into any new project to inherit:
+**Geodata** (working name: TerraScan) — plataforma de due diligence territorial
+para incorporadoras brasileiras.
 
-- A curated set of agent skills
-- Security-conscious defaults
-- Standard project structure and conventions
+### Value Proposition
+
+Relatório de viabilidade ambiental e urbanística para qualquer terreno no Brasil
+em menos de 30 minutos, usando fontes oficiais federais (SICAR, ANA, IBGE/SRTM),
+substituindo semanas de trabalho manual de consultores.
+
+### Target User
+
+Gerentes de aquisição de incorporadoras de pequeno/médio porte que avaliam
+10–30 terrenos por mês antes de decidir qual comprar.
+
+### Job To Be Done
+
+"Quero saber se esse terreno tem algum impedimento crítico antes de gastar
+dinheiro com visita técnica, advogado e engenheiro."
+
+## Product Definition
+
+### MVP Layers (5, by priority)
+
+| # | Layer | Data Source | Status |
+|---|---|---|---|
+| 1 | APP / Reserva Legal | SICAR/CAR (GeoServer WFS) | Federal, national coverage |
+| 2 | Risco de inundação | ANA / CEMADEN WMS | Federal, national coverage |
+| 3 | Declividade | SRTM 30m via Google Earth Engine | Global, 30m resolution |
+| 4 | Zoneamento municipal | GeoSampa (SP), IPPUC (Curitiba), open data where available | Municipal, partial coverage |
+| 5 | Valor do m² | ITBI open data (POA), real estate listings (Zap/VivaReal) | Regional, growing coverage |
+
+### Output Format
+
+PDF export + interactive web dashboard. **PDF is the priority** — it's what
+the director shares with partners and lawyers via WhatsApp.
+
+### Competitive Landscape
+
+**OSPA Place** — strong on financial feasibility and 3D volumetry, weak on
+environmental/territorial constraints. Coverage: ~4 cities. **Our advantage:**
+national coverage from day 1 via federal data sources (SICAR, ANA, SRTM).
+
+### Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | React + TypeScript + Mapbox GL JS + `@mapbox/mapbox-gl-draw` |
+| **Backend** | Python + FastAPI + GeoPandas + Shapely |
+| **Database (MVP)** | DuckDB + spatial extension |
+| **Database (Production)** | PostgreSQL + PostGIS |
+| **Geo processing** | Google Earth Engine (SRTM, vegetation) + Brazilian federal APIs (SICAR, ANA) |
+| **PDF generation** | Jinja2 + WeasyPrint (or Playwright headless) |
+
+### Current Phase
+
+**Prototype C** — market validation: landing page + 3 real terrain reports
+before starting data layer implementation. See [.claude/task_plan.md](.claude/task_plan.md)
+for the full roadmap.
+
+### Key Documents
+
+- [CONTEXT.md](CONTEXT.md) — all project decisions (survives `/clear`)
+- [issues/prd.md](issues/prd.md) — full Product Requirements Document
+- [issues/vertical-slices.md](issues/vertical-slices.md) — 8 vertical slices (tracer bullets)
+- [docs/adr/001-stack-choices.md](docs/adr/001-stack-choices.md) — architecture decision record
+- [docs/research-findings.md](docs/research-findings.md) — market research & Brazilian data sources
+- [.claude/task_plan.md](.claude/task_plan.md) — crash-proof task plan
+
+---
 
 ## Skills
 
@@ -56,6 +119,8 @@ for new projects bootstrapped from this base. Install them with
 |---|---|---|---|
 | `frontend-design` | `anthropics/skills` | Production-grade frontend interfaces. Distinctive, non-generic AI aesthetics. 595K installs | Projects with UI |
 | `superpowers` | `obra/superpowers` | Complete 7-stage engineering methodology with hard gates (brainstorming → plan → TDD → verify → review). 204K ⭐, 680K+ installs | Teams wanting maximum discipline |
+| `spatial` | `duckdb/duckdb-skills` | DuckDB spatial extension patterns. Overture Maps integration for global geodata. Use for spatial queries in prototyping phase | During MVP with DuckDB |
+| `mapbox-mcp-runtime-patterns` | `mapbox/mapbox-agent-skills` | Mapbox MCP Server integration patterns for geospatial AI applications. Covers distance, area, isochrones, routing tools | When integrating Mapbox MCP |
 
 ### Installing Recommended Skills
 
@@ -79,6 +144,10 @@ npx skills add trailofbits/skills@sharp-edges -g -y
 # Optional
 npx skills add anthropics/skills@frontend-design -g -y
 npx skills add obra/superpowers -g -y
+
+# Domain (Geodata project)
+npx skills add duckdb/duckdb-skills@spatial -g -y
+npx skills add mapbox/mapbox-agent-skills@mapbox-mcp-runtime-patterns -g -y
 ```
 
 After installation, run `security-review-skills` on each new skill and update
@@ -95,15 +164,21 @@ agent's skills directory and loaded on demand via progressive disclosure
 
 ## Spec-Driven Development
 
-This base includes a **built-in pipeline** for defining what to build before
-writing code: `grill-me` → `write-a-prd` → `prd-to-issues`. For teams wanting
-more formal specification workflows, see
+This project uses a **built-in pipeline** for defining what to build before
+writing code: `grill-me` → `write-a-prd` → `prd-to-issues`. For the Geodata
+project, this pipeline produced:
+
+- [CONTEXT.md](CONTEXT.md) — project decisions and scope
+- [issues/prd.md](issues/prd.md) — full PRD with 5 layers, personas, journey
+- [issues/vertical-slices.md](issues/vertical-slices.md) — 8 independent tracer bullets
+
+For teams wanting more formal specification workflows, see
 [docs/spec-driven-development.md](docs/spec-driven-development.md) — it covers
 OpenSpec (~55K ⭐), Spec-Kit (~40K ⭐), and product discovery tooling.
 
 ## MCP Servers
 
-This base recommends two [MCP (Model Context Protocol)](https://modelcontextprotocol.io)
+This project recommends two [MCP (Model Context Protocol)](https://modelcontextprotocol.io)
 servers that are universally useful across project types. See
 [docs/mcp-recommendations.md](docs/mcp-recommendations.md) for detailed setup
 instructions.
@@ -133,7 +208,7 @@ code.
 
 ## Sub-agents
 
-This base ships with two **specialized sub-agents** in `.claude/agents/`. They
+This project ships with two **specialized sub-agents** in `.claude/agents/`. They
 are loaded automatically by Claude Code and can be invoked via the Agent tool
 when deep, focused analysis is needed.
 
@@ -155,14 +230,14 @@ never modify code. The main agent decides what to act on.
 ## Security Posture
 
 - **Default deny**: No skill is trusted by default — even skills shipped with
-  this base were reviewed at time of writing and should be re-reviewed on
+  this project were reviewed at time of writing and should be re-reviewed on
   update.
 - **Review on install**: Every `npx skills add` must be followed by
   `security-review-skills`.
 - **Review on update**: Every `npx skills update` must re-trigger a security
   review.
 - **Audit trail**: Maintain a `.claude/skills-audit.json` recording which
-  skills have been reviewed, when, and the verdict.
+  skills have been reviewed, when, and the verdict. Currently 13 skills audited.
 - **Principle of least privilege**: When a skill declares `allowed-tools`,
   scope them to the minimum necessary. Prefer path-scoped `Write` over
   unrestricted access.
@@ -172,29 +247,43 @@ never modify code. The main agent decides what to act on.
 ### Project Structure
 
 ```
-├── CLAUDE.md              # This file — agent instructions
-├── README.md              # Human-readable project docs
-├── skills/                # Agent skills (SKILL.md files)
+├── CLAUDE.md                    # Agent instructions
+├── CONTEXT.md                   # Project decisions (survives /clear)
+├── README.md
+├── .env.example                 # Environment variable template
+├── skills/                      # Agent skills (SKILL.md files)
 │   ├── find-skills/
-│   │   └── SKILL.md
 │   └── security-review-skills/
-│       └── SKILL.md
-├── .claude/               # Claude Code configuration
-│   ├── settings.json      # Permissions and hooks
-│   ├── skills-audit.json  # Skill security audit trail
-│   └── agents/            # Specialized sub-agents
+├── .claude/                     # Claude Code configuration
+│   ├── settings.json
+│   ├── skills-audit.json        # 13 skills audited
+│   ├── task_plan.md             # Crash-proof task plan
+│   └── agents/
 │       ├── security-reviewer/
-│       │   └── AGENT.md
 │       └── code-reviewer/
-│           └── AGENT.md
-├── scripts/               # Convenience scripts
-│   ├── install-recommended-skills.sh   # Install recommended skills (Unix)
-│   └── install-recommended-skills.ps1  # Install recommended skills (Windows)
-├── src/                   # Source code (when applicable)
-├── tests/                 # Test suite (when applicable)
-└── docs/                  # Documentation
-    ├── mcp-recommendations.md
-    └── spec-driven-development.md
+├── src/
+│   ├── backend/
+│   │   ├── main.py              # FastAPI — GeoJSON validation + /api/analyze
+│   │   └── requirements.txt
+│   └── frontend/
+│       ├── package.json
+│       ├── vite.config.ts
+│       └── src/
+│           ├── App.tsx           # Map + polygon drawing + analysis flow
+│           ├── AnalysisPanel.tsx # Results dashboard with traffic lights
+│           ├── api.ts            # HTTP client for backend
+│           ├── types.ts          # TypeScript types
+│           └── index.css         # Professional theme (green accent)
+├── issues/
+│   ├── prd.md                   # Product Requirements Document
+│   └── vertical-slices.md       # 8 vertical slices (tracer bullets)
+├── docs/
+│   ├── adr/001-stack-choices.md
+│   ├── research-findings.md
+│   ├── mcp-recommendations.md
+│   └── spec-driven-development.md
+├── scripts/
+└── tests/
 ```
 
 ### File Naming
@@ -211,20 +300,3 @@ When creating new skills for this project:
 3. Keep instructions focused — one skill, one domain
 4. Declare `allowed-tools` explicitly; never use `["*"]`
 5. Run `security-review-skills` on the skill before committing
-
-## For New Projects
-
-To use this base in a new project:
-
-```bash
-# Option A: Clone as starting point
-git clone <this-repo> my-new-project
-cd my-new-project
-rm -rf .git && git init
-
-# Option B: Copy the structure
-cp -r skills/ CLAUDE.md README.md .claude/ <target-project>/
-```
-
-Then customize `CLAUDE.md` with project-specific instructions and add
-domain-specific skills via `find-skills`.
