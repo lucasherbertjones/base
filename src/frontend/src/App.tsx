@@ -6,11 +6,10 @@ import type { AnalysisResponse, GeometryValidation } from "./types";
 import { validateGeometry, analyzeArea, healthCheck } from "./api";
 import AnalysisPanel from "./AnalysisPanel";
 
-// ⚠️ Substitua pelo seu token do Mapbox: https://account.mapbox.com/access-tokens/
-// Formato: pk.eyJ1IjoiSEVVU0VS... (token público, começa com "pk.")
-const MAPBOX_TOKEN = "SEU_TOKEN_MAPBOX_AQUI";
-
-mapboxgl.accessToken = MAPBOX_TOKEN;
+// Token público do Mapbox lido de variável de ambiente
+// Crie um arquivo .env com VITE_MAPBOX_TOKEN=pk.seu_token_aqui
+// Obtenha seu token em: https://account.mapbox.com/access-tokens/
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 type AppStep = "draw" | "validating" | "analyzing" | "results" | "error";
 
@@ -38,9 +37,10 @@ export default function App() {
 
     const m = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/light-v11",
+      style: "mapbox://styles/mapbox/streets-v12",
       center: [-46.6333, -23.5505], // São Paulo
-      zoom: 13,
+      zoom: 14,
+      antialias: true,
     });
 
     m.addControl(new mapboxgl.NavigationControl(), "top-right");
@@ -103,6 +103,8 @@ export default function App() {
 
     return () => {
       m.remove();
+      mapRef.current = null;
+      drawRef.current = null;
     };
   }, []);
 
@@ -152,18 +154,11 @@ export default function App() {
           {step === "draw" && (
             <div className="map-overlay">
               <div className="instruction-card">
-                <div className="instruction-icon">✏️</div>
-                <h2>Desenhe o terreno no mapa</h2>
+                <h2>✏️ Desenhe o terreno</h2>
                 <p>
-                  Clique nos vértices do terreno para criar o polígono.
-                  <br />
-                  Duplo-clique no último ponto para fechar.
+                  Clique nos vértices para criar o polígono.
+                  Duplo-clique para fechar.
                 </p>
-                <div className="instruction-hints">
-                  <span>🔍 Scroll = zoom</span>
-                  <span>🖐️ Arraste = mover</span>
-                  <span>🗑️ Lixeira = recomeçar</span>
-                </div>
               </div>
             </div>
           )}
@@ -176,18 +171,13 @@ export default function App() {
                 <h2>
                   {step === "validating" ? "Validando geometria..." : "Analisando terreno..."}
                 </h2>
-                <p>
-                  {step === "validating"
-                    ? "Verificando coordenadas e área do polígono"
-                    : "Consultando fontes de dados geoespaciais"}
-                </p>
               </div>
             </div>
           )}
 
           {/* Error */}
           {step === "error" && (
-            <div className="map-overlay">
+            <div className="map-overlay is-centered">
               <div className="error-card">
                 <div className="error-icon">⚠️</div>
                 <h2>Erro na análise</h2>

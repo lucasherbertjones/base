@@ -66,8 +66,13 @@ for the full roadmap.
 - [CONTEXT.md](CONTEXT.md) — all project decisions (survives `/clear`)
 - [issues/prd.md](issues/prd.md) — full Product Requirements Document
 - [issues/vertical-slices.md](issues/vertical-slices.md) — 8 vertical slices (tracer bullets)
-- [docs/adr/001-stack-choices.md](docs/adr/001-stack-choices.md) — architecture decision record
+- [docs/adr/001-stack-choices.md](docs/adr/001-stack-choices.md) — architecture decision record (stack)
+- [docs/adr/002-database-choice.md](docs/adr/002-database-choice.md) — DuckDB → PostGIS migration path
+- [docs/adr/003-geo-processing.md](docs/adr/003-geo-processing.md) — GEE + Brazilian APIs hybrid model
+- [docs/adr/004-mvp-layers.md](docs/adr/004-mvp-layers.md) — 5-layer MVP scope and rationale
+- [docs/adr/005-validation-strategy.md](docs/adr/005-validation-strategy.md) — 3-phase go/no-go validation
 - [docs/research-findings.md](docs/research-findings.md) — market research & Brazilian data sources
+- [docs/competitive-analysis/ospa-place.md](docs/competitive-analysis/ospa-place.md) — main competitor deep-dive
 - [.claude/task_plan.md](.claude/task_plan.md) — crash-proof task plan
 
 ---
@@ -224,8 +229,11 @@ when deep, focused analysis is needed.
 - **`code-reviewer`**: On every PR. Before refactoring critical paths. When
   onboarding new team members to the codebase.
 
-Both agents are **read-only by design** — they produce structured findings but
-never modify code. The main agent decides what to act on.
+Both agents are **read-only by design** — their instructions direct them to
+produce structured findings without modifying code or system state. The main
+agent decides what to act on. Note: `Bash` is included for read-only operations
+(installing audit dependencies, running static analyzers); agents are
+instructed to never use it for destructive writes.
 
 ## Security Posture
 
@@ -237,7 +245,8 @@ never modify code. The main agent decides what to act on.
 - **Review on update**: Every `npx skills update` must re-trigger a security
   review.
 - **Audit trail**: Maintain a `.claude/skills-audit.json` recording which
-  skills have been reviewed, when, and the verdict. Currently 13 skills audited.
+  skills have been reviewed, when, and the verdict. Currently 16 skills audited
+  (1 rejected — see audit file for details).
 - **Principle of least privilege**: When a skill declares `allowed-tools`,
   scope them to the minimum necessary. Prefer path-scoped `Write` over
   unrestricted access.
@@ -250,17 +259,31 @@ never modify code. The main agent decides what to act on.
 ├── CLAUDE.md                    # Agent instructions
 ├── CONTEXT.md                   # Project decisions (survives /clear)
 ├── README.md
+├── .editorconfig
 ├── .env.example                 # Environment variable template
+├── .gitignore
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── SECURITY.md
+├── VERSION
+├── package.json                 # Root scripts (dev, build)
 ├── skills/                      # Agent skills (SKILL.md files)
 │   ├── find-skills/
 │   └── security-review-skills/
 ├── .claude/                     # Claude Code configuration
 │   ├── settings.json
-│   ├── skills-audit.json        # 13 skills audited
+│   ├── skills-audit.json        # 16 skills audited
 │   ├── task_plan.md             # Crash-proof task plan
 │   └── agents/
 │       ├── security-reviewer/
 │       └── code-reviewer/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── .vscode/
+│   ├── settings.json
+│   └── extensions.json
 ├── src/
 │   ├── backend/
 │   │   ├── main.py              # FastAPI — GeoJSON validation + /api/analyze
@@ -268,22 +291,35 @@ never modify code. The main agent decides what to act on.
 │   └── frontend/
 │       ├── package.json
 │       ├── vite.config.ts
+│       ├── tsconfig.json
+│       ├── index.html
 │       └── src/
 │           ├── App.tsx           # Map + polygon drawing + analysis flow
 │           ├── AnalysisPanel.tsx # Results dashboard with traffic lights
 │           ├── api.ts            # HTTP client for backend
 │           ├── types.ts          # TypeScript types
-│           └── index.css         # Professional theme (green accent)
+│           ├── main.tsx          # React entry point
+│           └── index.css         # Global styles + theme
 ├── issues/
 │   ├── prd.md                   # Product Requirements Document
 │   └── vertical-slices.md       # 8 vertical slices (tracer bullets)
 ├── docs/
-│   ├── adr/001-stack-choices.md
+│   ├── adr/
+│   │   ├── 001-stack-choices.md
+│   │   ├── 002-database-choice.md
+│   │   ├── 003-geo-processing.md
+│   │   ├── 004-mvp-layers.md
+│   │   └── 005-validation-strategy.md
+│   ├── competitive-analysis/
+│   │   └── ospa-place.md
 │   ├── research-findings.md
 │   ├── mcp-recommendations.md
 │   └── spec-driven-development.md
 ├── scripts/
+│   ├── install-recommended-skills.sh
+│   └── install-recommended-skills.ps1
 └── tests/
+    └── .gitkeep
 ```
 
 ### File Naming

@@ -1,0 +1,16 @@
+{
+  "name": "geodata",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Plataforma de due diligence territorial para incorporadoras brasileiras",
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "cd src/backend && .\\venv\\Scripts\\python.exe main.py",
+    "dev:web": "cd src/frontend && npm run dev",
+    "install:all": "cd src/backend && .\\venv\\Scripts\\python.exe -m pip install -r requirements.txt && cd ../frontend && npm install",
+    "build": "cd src/frontend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

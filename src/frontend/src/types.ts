@@ -1,9 +1,13 @@
 /// <reference types="vite/client" />
 
-// Token do Mapbox — free tier (50K loads/mês)
-// Em produção, mover para variável de ambiente
-export const MAPBOX_TOKEN =
-  "pk.eyJ1IjoiZ2VvZGF0YS1kZXYiLCJhIjoiY20wMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCJ9.0000000000000000000000000";
+// Tipagem para variáveis de ambiente do Vite
+interface ImportMetaEnv {
+  readonly VITE_MAPBOX_TOKEN: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
 
 export interface GeoJSONGeometry {
   type: string;

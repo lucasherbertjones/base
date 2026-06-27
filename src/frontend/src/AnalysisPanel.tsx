@@ -69,7 +69,7 @@ export default function AnalysisPanel({ analysis, validation, onReset }: Props) 
                 </span>
               </div>
               <p className="layer-summary">{layer.summary}</p>
-              {layer.percentage_affected !== undefined && (
+              {layer.percentage_affected != null && (
                 <div className="layer-bar-container">
                   <div className="layer-bar">
                     <div

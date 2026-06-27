@@ -17,14 +17,14 @@
 
 ## Escopo do MVP
 
-### Camadas (5 imprescindíveis)
+### Camadas (5 imprescindíveis, ordenadas por prioridade)
 
 | # | Camada | Fonte Primária | Justificativa |
 |---|---|---|---|
 | 1 | APP / Reserva Legal | SICAR/CAR (GeoServer WFS) | Deal-breaker jurídico |
-| 2 | Zoneamento municipal | Prefeituras (GeoSampa, IPPUC, etc.) + scraping | Define potencial construtivo |
-| 3 | Risco de inundação | ANA (WMS manchas) + CEMADEN | Inviabiliza financiamento |
-| 4 | Declividade / Topografia | SRTM via GEE (30m) | Restrição legal >30% |
+| 2 | Risco de inundação | ANA (WMS manchas) + CEMADEN | Inviabiliza financiamento |
+| 3 | Declividade / Topografia | SRTM via GEE (30m) | Restrição legal >30% |
+| 4 | Zoneamento municipal | Prefeituras (GeoSampa, IPPUC, etc.) + scraping | Define potencial construtivo |
 | 5 | Valor do m² na região | GeoSampa, ITBI/IPTU aberto, Zap Imóveis | Viabilidade financeira |
 
 ### Fora do MVP (módulos futuros)
