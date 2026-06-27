@@ -91,6 +91,22 @@ instructions. Skills installed via `npx skills add` are symlinked into the
 agent's skills directory and loaded on demand via progressive disclosure
 (YAML frontmatter → SKILL.md body → references/).
 
+## MCP Servers
+
+This base recommends two [MCP (Model Context Protocol)](https://modelcontextprotocol.io)
+servers that are universally useful across project types. See
+[docs/mcp-recommendations.md](docs/mcp-recommendations.md) for detailed setup
+instructions.
+
+| MCP Server | Purpose | Universal? |
+|---|---|---|
+| **Context7** | Up-to-date library documentation — prevents the agent from hallucinating stale APIs or deprecated patterns | ✅ Yes |
+| **GitHub MCP** | PRs, issues, releases, and repo operations without leaving the agent | ✅ Yes |
+
+> **Note**: MCP servers often require API keys or authentication. These are
+> recommendations, not pre-configured defaults. Set them up per-project with
+> `claude mcp add`.
+
 ## Workflow: Discover → Audit → Install
 
 When a skill is needed or requested, follow this sequence:
@@ -104,6 +120,27 @@ When a skill is needed or requested, follow this sequence:
 **Never skip the security review.** A skill has access to the agent's full
 context and tool permissions. Treat installing a skill like running third-party
 code.
+
+## Sub-agents
+
+This base ships with two **specialized sub-agents** in `.claude/agents/`. They
+are loaded automatically by Claude Code and can be invoked via the Agent tool
+when deep, focused analysis is needed.
+
+| Agent | Purpose | Tools |
+|---|---|---|
+| `security-reviewer` | Deep security audit: supply chain → diff review → sharp edges → consolidated report | Read, Grep, Glob, Bash, WebFetch |
+| `code-reviewer` | Thorough code review across correctness, security, performance, and maintainability | Read, Grep, Glob, Bash |
+
+### When to Use
+
+- **`security-reviewer`**: Before merging PRs with auth, crypto, or data-handling
+  changes. Before adding new dependencies. Weekly security sweep.
+- **`code-reviewer`**: On every PR. Before refactoring critical paths. When
+  onboarding new team members to the codebase.
+
+Both agents are **read-only by design** — they produce structured findings but
+never modify code. The main agent decides what to act on.
 
 ## Security Posture
 
@@ -134,7 +171,12 @@ code.
 │       └── SKILL.md
 ├── .claude/               # Claude Code configuration
 │   ├── settings.json      # Permissions and hooks
-│   └── skills-audit.json  # Skill security audit trail
+│   ├── skills-audit.json  # Skill security audit trail
+│   └── agents/            # Specialized sub-agents
+│       ├── security-reviewer/
+│       │   └── AGENT.md
+│       └── code-reviewer/
+│           └── AGENT.md
 ├── scripts/               # Convenience scripts
 │   ├── install-recommended-skills.sh   # Install recommended skills (Unix)
 │   └── install-recommended-skills.ps1  # Install recommended skills (Windows)
